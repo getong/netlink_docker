@@ -1,0 +1,16 @@
+{application, netlink_docker,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {netlink_docker_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    netlink
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.

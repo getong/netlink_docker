@@ -1,0 +1,10 @@
+{"1.1.0",
+[{<<"hut">>,{pkg,<<"hut">>,<<"1.2.1">>},1},
+ {<<"netlink">>,
+  {git,"https://github.com/getong/netlink",
+       {ref,"d261d50ee0f391802a7b2bb6aec6a4539747cb72"}},
+  0}]}.
+[
+{pkg_hash,[
+ {<<"hut">>, <<"08D46679523043424870723923971889E8A34D63B2F946A35B46CF921D1236E7">>}]}
+].
