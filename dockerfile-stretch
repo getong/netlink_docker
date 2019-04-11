@@ -1,0 +1,42 @@
+FROM erlang:21.3.3 as builder
+
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+
+RUN echo 'deb http://mirrors.aliyun.com/debian/ stretch main non-free contrib \n\
+deb-src http://mirrors.aliyun.com/debian/ stretch main non-free contrib \n\
+deb http://mirrors.aliyun.com/debian-security stretch/updates main \n\
+deb-src http://mirrors.aliyun.com/debian-security stretch/updates main \n\
+deb http://mirrors.aliyun.com/debian/ stretch-updates main non-free contrib \n\
+deb-src http://mirrors.aliyun.com/debian/ stretch-updates main non-free contrib \n\
+deb http://mirrors.aliyun.com/debian/ stretch-backports main non-free contrib \n\
+deb-src http://mirrors.aliyun.com/debian/ stretch-backports main non-free contrib' > /etc/apt/sources.list
+
+RUN cat /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get install -y ca-certificates libssl-dev gcc g++ make tzdata wget linux-headers-amd64
+
+RUN mkdir /build_temp
+
+WORKDIR /build_temp
+
+COPY . .
+
+RUN rebar3 update
+
+RUN rebar3 as prod tar
+
+RUN mkdir -p /opt/rel
+
+RUN tar xzf _build/prod/rel/*/*.tar.gz -C /opt/rel
+
+FROM erlang:21.3.3
+
+RUN apt-get update
+RUN apt-get install libssl-dev g++ tzdata -y
+
+RUN mkdir /netlink_docker
+WORKDIR /netlink_docker
+
+COPY --from=builder /opt/rel .
+
+CMD ["/netlink_docker/bin/netlink_docker", "foreground"]
